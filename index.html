@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merry Christmas!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(to bottom, #1a472a, #2d5a3f);
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+        }
+
+        .christmas-font {
+            font-family: 'Mountains of Christmas', cursive;
+        }
+
+        /* Snow Animation */
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: white;
+            font-size: 1em;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 1;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh);
+            }
+        }
+
+        /* Card Flip/Open Animation details */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        .card-container {
+            transition: transform 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        .open-state .card-container {
+            transform: rotateY(180deg);
+        }
+
+        /* Twinkling lights */
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; box-shadow: 0 0 10px #ffd700; }
+            50% { opacity: 0.5; box-shadow: 0 0 2px #ffd700; }
+        }
+
+        .light {
+            animation: twinkle 1.5s infinite ease-in-out;
+        }
+        .light:nth-child(even) { animation-delay: 0.5s; }
+        .light:nth-child(3n) { animation-delay: 1s; }
+
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen relative">
+
+    <!-- Background Decorations -->
+    <div class="absolute top-0 w-full h-16 flex justify-around items-start z-10 pointer-events-none">
+        <!-- Creating a string of lights -->
+        <div class="w-1 h-8 bg-gray-600 relative"><div class="light w-4 h-4 rounded-full bg-red-500 absolute bottom-0 -left-1.5 shadow-lg"></div></div>
+        <div class="w-1 h-10 bg-gray-600 relative"><div class="light w-4 h-4 rounded-full bg-yellow-400 absolute bottom-0 -left-1.5 shadow-lg"></div></div>
+        <div class="w-1 h-8 bg-gray-600 relative"><div class="light w-4 h-4 rounded-full bg-blue-400 absolute bottom-0 -left-1.5 shadow-lg"></div></div>
+        <div class="w-1 h-12 bg-gray-600 relative"><div class="light w-4 h-4 rounded-full bg-green-500 absolute bottom-0 -left-1.5 shadow-lg"></div></div>
+        <div class="w-1 h-8 bg-gray-600 relative"><div class="light w-4 h-4 rounded-full bg-red-500 absolute bottom-0 -left-1.5 shadow-lg"></div></div>
+        <div class="w-1 h-10 bg-gray-600 relative"><div class="light w-4 h-4 rounded-full bg-yellow-400 absolute bottom-0 -left-1.5 shadow-lg"></div></div>
+        <div class="w-1 h-8 bg-gray-600 relative"><div class="light w-4 h-4 rounded-full bg-blue-400 absolute bottom-0 -left-1.5 shadow-lg"></div></div>
+    </div>
+
+    <!-- Main Card Container -->
+    <div id="cardWrapper" class="relative w-80 h-96 sm:w-96 sm:h-[500px] perspective-1000 z-20 cursor-pointer group">
+        
+        <div class="card-container relative w-full h-full transform-style-3d shadow-2xl rounded-xl">
+            
+            <!-- Front of Card -->
+            <div class="absolute w-full h-full backface-hidden bg-red-700 rounded-xl flex flex-col items-center justify-center border-4 border-yellow-400 p-6 text-center text-white">
+                <div class="text-6xl mb-4">🎄</div>
+                <h1 class="christmas-font text-5xl font-bold mb-2 text-yellow-300 drop-shadow-md">Merry Christmas</h1>
+                <p class="text-lg opacity-90">To Mortgage House</p>
+                
+                <div class="mt-8 animate-bounce">
+                    <span class="bg-white text-red-700 px-4 py-2 rounded-full font-bold shadow-lg text-sm">
+                        Tap to Open
+                    </span>
+                </div>
+
+                <!-- Decorative Pattern -->
+                <div class="absolute bottom-4 w-full flex justify-center gap-2 opacity-30">
+                    <span>❄️</span><span>❄️</span><span>❄️</span>
+                </div>
+            </div>
+
+            <!-- Inside of Card (Back) -->
+            <div class="absolute w-full h-full backface-hidden rotate-y-180 bg-white rounded-xl flex flex-col items-center justify-center p-8 text-center border-4 border-red-700 shadow-inner">
+                
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4 text-3xl">
+                    🎅
+                </div>
+
+                <h2 class="christmas-font text-3xl text-red-600 font-bold mb-4">Warmest Wishes</h2>
+                
+                <p class="text-gray-700 leading-relaxed mb-6">
+                    May your holidays be filled with joy, laughter, and magical moments. Wishing you a wonderful Christmas and a Happy New Year!
+                </p>
+
+                <p class="christmas-font text-2xl text-green-700">
+                    With Love,
+                    <br>
+                    <span id="senderName" class="text-red-600">Santa's Helper</span>
+                </p>
+
+                <button onclick="resetCard(event)" class="mt-8 text-xs text-gray-400 hover:text-red-500 underline">
+                    Close Card
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="absolute bottom-4 text-white/50 text-xs text-center w-full z-10">
+        Made with Holiday Cheer
+    </div>
+
+    <script>
+        // --- Interaction Logic ---
+        const cardWrapper = document.getElementById('cardWrapper');
+        
+        cardWrapper.addEventListener('click', function() {
+            this.classList.toggle('open-state');
+            createFirework();
+        });
+
+        function resetCard(e) {
+            e.stopPropagation(); // Prevent the parent click from triggering immediately
+            cardWrapper.classList.remove('open-state');
+        }
+
+        // --- Snow Logic ---
+        function createSnowflake() {
+            const snow = document.createElement('div');
+            snow.classList.add('snowflake');
+            snow.innerHTML = '❄'; // You can also use • or *
+            
+            // Randomize position and size
+            snow.style.left = Math.random() * 100 + 'vw';
+            snow.style.fontSize = (Math.random() * 10 + 10) + 'px';
+            
+            // Randomize animation duration
+            const duration = Math.random() * 3 + 2; // Between 2 and 5 seconds
+            snow.style.animationDuration = duration + 's';
+            
+            document.body.appendChild(snow);
+
+            // Remove snowflake after it falls
+            setTimeout(() => {
+                snow.remove();
+            }, duration * 1000);
+        }
+
+        // Create snow continuously
+        setInterval(createSnowflake, 100);
+
+        // --- Confetti/Firework on Open ---
+        function createFirework() {
+            if(!cardWrapper.classList.contains('open-state')) return;
+
+            const colors = ['#ff0000', '#00ff00', '#ffd700'];
+            for(let i=0; i<30; i++) {
+                const particle = document.createElement('div');
+                particle.style.position = 'absolute';
+                particle.style.left = '50%';
+                particle.style.top = '50%';
+                particle.style.width = '8px';
+                particle.style.height = '8px';
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.borderRadius = '50%';
+                particle.style.pointerEvents = 'none';
+                particle.style.zIndex = '50';
+                
+                // Random destination
+                const tx = (Math.random() - 0.5) * 400;
+                const ty = (Math.random() - 0.5) * 400;
+                
+                particle.style.transition = 'transform 1s ease-out, opacity 1s ease-out';
+                
+                document.body.appendChild(particle); // Append to body so it pops out of card
+                
+                // Get card position to center the pop
+                const rect = cardWrapper.getBoundingClientRect();
+                particle.style.left = (rect.left + rect.width/2) + 'px';
+                particle.style.top = (rect.top + rect.height/2) + 'px';
+
+                requestAnimationFrame(() => {
+                    particle.style.transform = `translate(${tx}px, ${ty}px)`;
+                    particle.style.opacity = '0';
+                });
+
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+    </script>
+</body>
+</html>
