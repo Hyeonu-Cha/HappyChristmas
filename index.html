@@ -9,13 +9,25 @@
     <style>
         body {
             font-family: 'Quicksand', sans-serif;
-            background: linear-gradient(to bottom, #1a472a, #0f2b1d);
+            background-color: black;
             overflow: hidden; /* Prevent scrolling */
             height: 100vh;
             width: 100vw;
+            color: white;
         }
 
         .christmas-font { font-family: 'Mountains of Christmas', cursive; }
+
+        /* Matrix Canvas Background */
+        #matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Behind content */
+            opacity: 0.4; /* Subtle enough to not distract */
+        }
 
         /* Viewport Transition Wrapper */
         #main-viewport {
@@ -23,9 +35,10 @@
             width: 100%;
             display: flex;
             flex-direction: column;
-            /* Start shifted up by 100vh so we see the Card (the bottom half) first */
             transform: translateY(-100vh); 
             transition: transform 1.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+            position: relative;
+            z-index: 10; /* Above matrix */
         }
 
         /* Class to slide everything down */
@@ -38,20 +51,21 @@
             height: 100vh;
             width: 100%;
             position: relative;
-            overflow-y: auto; /* Allow scrolling inside the scene if content is long */
+            overflow-y: auto;
             overflow-x: hidden;
         }
 
-        /* Snow Animation */
+        /* Snow Animation - Adjusted for Matrix theme */
         .snowflake {
             position: absolute;
             top: -10px;
-            color: white;
+            color: #d1fae5; /* Light green/white tint */
             font-size: 1em;
-            opacity: 0.8;
+            opacity: 0.6;
             pointer-events: none;
-            z-index: 50; /* Snow on top of everything */
+            z-index: 50;
             animation: fall linear forwards;
+            text-shadow: 0 0 5px #4ade80; /* Glowing snow */
         }
         @keyframes fall { to { transform: translateY(110vh); } }
 
@@ -71,7 +85,7 @@
         }
         .ornament:hover {
             transform: scale(1.1) rotate(0deg) !important;
-            filter: drop-shadow(0 0 10px gold);
+            filter: drop-shadow(0 0 10px #4ade80); /* Matrix Green Glow */
             z-index: 50;
             cursor: pointer;
         }
@@ -82,19 +96,22 @@
 
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0f2b1d; }
-        ::-webkit-scrollbar-thumb { background: #c53030; rounded: 4px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #15803d; rounded: 4px; }
     </style>
 </head>
-<body class="text-white">
+<body>
+
+    <!-- Matrix Background -->
+    <canvas id="matrix-bg"></canvas>
 
     <!-- Main Wrapper that slides -->
     <div id="main-viewport">
         
         <!-- SCENE 2: THE TEAM TREE (Positioned on TOP) -->
         <div id="scene-tree" class="scene-section flex flex-col items-center py-10 relative">
-            <h1 class="christmas-font text-5xl text-yellow-400 mb-2 text-center drop-shadow-lg mt-8">Our Team Tree</h1>
-            <p class="text-center text-gray-300 mb-8 max-w-md px-4">Tap an ornament to see a message!</p>
+            <h1 class="christmas-font text-5xl text-green-400 mb-2 text-center drop-shadow-[0_0_10px_rgba(74,222,128,0.8)] mt-8">Our Digital Tree</h1>
+            <p class="text-center text-green-200 mb-8 max-w-md px-4 font-mono text-sm">> Accessing Team Database...</p>
             
             <!-- Tree Container -->
             <div class="relative w-full max-w-4xl px-4 flex justify-center pb-20">
@@ -104,8 +121,8 @@
             </div>
 
             <!-- Back Button -->
-            <button onclick="backToCard()" class="fixed bottom-6 left-6 bg-white/10 hover:bg-white/20 backdrop-blur text-white px-4 py-2 rounded-full border border-white/30 transition z-40">
-                ↑ Back to Card
+            <button onclick="backToCard()" class="fixed bottom-6 left-6 bg-black/50 hover:bg-green-900/50 backdrop-blur text-green-400 px-4 py-2 rounded border border-green-500/50 transition z-40 font-mono text-sm">
+                [ UP_DIRECTORY ]
             </button>
         </div>
 
@@ -115,28 +132,32 @@
                 <div class="card-container relative w-full h-full transform-style-3d shadow-2xl rounded-xl">
                     
                     <!-- Front -->
-                    <div class="absolute w-full h-full backface-hidden bg-red-700 rounded-xl flex flex-col items-center justify-center border-4 border-yellow-400 p-6 text-center text-white">
-                        <div class="text-6xl mb-4">🎄</div>
-                        <h1 class="christmas-font text-5xl font-bold mb-2 text-yellow-300">Merry Christmas</h1>
-                        <p class="text-lg opacity-90">To Our Amazing Team</p>
-                        <div class="mt-8 animate-bounce">
-                            <span class="bg-white text-red-700 px-4 py-2 rounded-full font-bold shadow-lg text-sm">Tap to Open</span>
+                    <div class="absolute w-full h-full backface-hidden bg-gradient-to-br from-gray-900 to-black rounded-xl flex flex-col items-center justify-center border-2 border-green-500 p-6 text-center text-white shadow-[0_0_20px_rgba(34,197,94,0.3)]">
+                        <div class="text-6xl mb-4 animate-pulse">🎄</div>
+                        <h1 class="christmas-font text-5xl font-bold mb-2 text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.8)]">System: Xmas</h1>
+                        <p class="text-lg text-green-200 font-mono opacity-80">> Decrypting...</p>
+                        <div class="mt-8">
+                            <span class="bg-green-600 text-black px-4 py-2 font-bold shadow-[0_0_10px_#22c55e] text-sm hover:bg-green-400 transition font-mono">
+                                [ EXECUTE_OPEN ]
+                            </span>
                         </div>
                     </div>
 
                     <!-- Back (Inside) -->
-                    <div class="absolute w-full h-full backface-hidden rotate-y-180 bg-white rounded-xl flex flex-col items-center justify-center p-8 text-center border-4 border-red-700 shadow-inner">
-                        <h2 class="christmas-font text-3xl text-red-600 font-bold mb-2">Seasons Greetings</h2>
-                        <p class="text-gray-700 text-sm leading-relaxed mb-6">
-                            We wanted to send you a special wish from everyone on our team.
+                    <div class="absolute w-full h-full backface-hidden rotate-y-180 bg-black rounded-xl flex flex-col items-center justify-center p-8 text-center border-2 border-green-500 shadow-[inset_0_0_20px_rgba(34,197,94,0.2)]">
+                        <h2 class="christmas-font text-3xl text-green-500 font-bold mb-2">Access Granted</h2>
+                        <p class="text-green-100/80 text-sm leading-relaxed mb-6 font-mono">
+                            We wanted to send you a special transmission from the team mainframe.
                         </p>
                         
                         <!-- BUTTON to Trigger Slide -->
-                        <button onclick="goToTree(event)" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition hover:scale-105 flex items-center gap-2">
-                            <span>🎁</span> Meet the Team
+                        <button onclick="goToTree(event)" class="bg-green-700 hover:bg-green-600 text-white font-bold py-3 px-6 rounded shadow-[0_0_15px_#15803d] transform transition hover:scale-105 flex items-center gap-2 font-mono">
+                            <span>💾</span> [ LOAD_TEAM ]
                         </button>
                         
-                        <button onclick="resetCard(event)" class="mt-6 text-xs text-gray-400 hover:text-red-500 underline">Close</button>
+                        <button onclick="resetCard(event)" class="mt-6 text-xs text-gray-500 hover:text-green-400 font-mono">
+                            < close_process >
+                        </button>
                     </div>
                 </div>
             </div>
@@ -145,14 +166,14 @@
     </div>
 
     <!-- MESSAGE MODAL (Pop-up) -->
-    <div id="messageModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4" onclick="closeModal()">
-        <div class="bg-white text-gray-800 rounded-2xl p-6 max-w-sm w-full relative transform scale-100 transition shadow-2xl border-4 border-green-600" onclick="event.stopPropagation()">
-            <button onclick="closeModal()" class="absolute top-2 right-4 text-3xl text-gray-400 hover:text-red-500">&times;</button>
+    <div id="messageModal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm" onclick="closeModal()">
+        <div class="bg-gray-900 text-green-400 rounded border border-green-500 p-6 max-w-sm w-full relative transform scale-100 transition shadow-[0_0_30px_rgba(34,197,94,0.2)]" onclick="event.stopPropagation()">
+            <button onclick="closeModal()" class="absolute top-2 right-4 text-3xl text-green-700 hover:text-green-400">&times;</button>
             <div class="flex flex-col items-center text-center">
-                <img id="modalImg" src="" class="w-24 h-24 rounded-full border-4 border-red-500 shadow-lg mb-4 object-cover">
-                <h3 id="modalName" class="christmas-font text-3xl text-green-700 font-bold"></h3>
-                <div class="w-16 h-1 bg-yellow-400 my-3 rounded"></div>
-                <p id="modalMsg" class="text-lg leading-relaxed italic text-gray-600"></p>
+                <img id="modalImg" src="" class="w-24 h-24 rounded-full border-2 border-green-400 shadow-[0_0_15px_rgba(34,197,94,0.5)] mb-4 object-cover">
+                <h3 id="modalName" class="font-mono text-xl text-green-400 font-bold"></h3>
+                <div class="w-full h-px bg-green-800 my-3"></div>
+                <p id="modalMsg" class="text-lg leading-relaxed font-mono text-green-200"></p>
             </div>
         </div>
     </div>
@@ -164,42 +185,42 @@
         
         const teamMembers = [
             {
-                name: "Alex the Puppy",
+                name: "Agent Puppy",
                 message: "Barking you a Merry Christmas!",
                 photoUrl: "https://loremflickr.com/200/200/puppy?lock=1" 
             },
             {
-                name: "Sarah the Kitty",
-                message: "Have a purr-fect holiday season! 🐾",
+                name: "Neo Kitty",
+                message: "There is no spoon... only catnip. 🐾",
                 photoUrl: "https://loremflickr.com/200/200/kitten?lock=2"
             },
             {
-                name: "Mike the Bear",
+                name: "Morpheus Bear",
                 message: "Sending bear hugs to you and your family.",
                 photoUrl: "https://loremflickr.com/200/200/bear?lock=3"
             },
             {
-                name: "Jessica the Fox",
+                name: "Trinity Fox",
                 message: "Staying clever and cozy this winter.",
                 photoUrl: "https://loremflickr.com/200/200/fox?lock=4"
             },
             {
-                name: "David the Panda",
-                message: "Eating bamboo and spreading joy! 🎋",
+                name: "Oracle Panda",
+                message: "I predict... lots of bamboo! 🎋",
                 photoUrl: "https://loremflickr.com/200/200/panda?lock=5"
             },
             {
-                name: "Emily the Owl",
+                name: "Cipher Owl",
                 message: "Whooo wishes you a Happy New Year? I do!",
                 photoUrl: "https://loremflickr.com/200/200/owl?lock=6"
             },
             {
-                name: "Chris the Dog",
+                name: "Tank Dog",
                 message: "Unleashing joy this holiday season!",
                 photoUrl: "https://loremflickr.com/200/200/dog?lock=7"
             },
             {
-                name: "Amanda the Bun",
+                name: "Switch Bun",
                 message: "Hopping into 2025 with excitement!",
                 photoUrl: "https://loremflickr.com/200/200/rabbit?lock=8"
             }
@@ -209,6 +230,54 @@
         //  👆 END OF EDITING AREA 👆
         // ==========================================
 
+        // --- MATRIX RAIN EFFECT ---
+        const canvas = document.getElementById('matrix-bg');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*❄★🎄";
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+
+        // Initialize drops
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+
+        function drawMatrix() {
+            // Black bg with slight opacity for trail effect
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "#0F0"; // Green text
+            ctx.font = fontSize + "px monospace";
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                
+                // Randomly color special xmas chars
+                if (text === '❄' || text === '★') ctx.fillStyle = "#FFF";
+                else if (text === '🎄') ctx.fillStyle = "#F00";
+                else ctx.fillStyle = "#22c55e"; // Matrix Green
+
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 33);
+
+
         // --- Tree Builder ---
         const container = document.getElementById('team-container');
         teamMembers.forEach((member) => {
@@ -217,13 +286,14 @@
             div.className = 'ornament flex flex-col items-center group relative';
             div.style.animationDelay = `-${delay}s`;
             div.onclick = () => showMessage(member);
+            // Updated styles for Matrix Theme (Green borders, glow)
             div.innerHTML = `
-                <div class="h-8 w-0.5 bg-yellow-200 opacity-60"></div>
-                <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-yellow-400 overflow-hidden shadow-[0_0_15px_rgba(255,215,0,0.3)] bg-white relative z-10 transition hover:border-white">
-                    <img src="${member.photoUrl}" alt="${member.name}" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-black/10 hover:bg-transparent transition"></div>
+                <div class="h-8 w-0.5 bg-green-500/50"></div>
+                <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-green-500 overflow-hidden shadow-[0_0_10px_rgba(34,197,94,0.4)] bg-black relative z-10 transition hover:border-white hover:shadow-[0_0_20px_#4ade80]">
+                    <img src="${member.photoUrl}" alt="${member.name}" class="w-full h-full object-cover opacity-90 group-hover:opacity-100">
+                    <div class="absolute inset-0 bg-green-900/20 group-hover:bg-transparent transition"></div>
                 </div>
-                <span class="mt-2 bg-black/30 backdrop-blur px-2 py-1 rounded text-xs sm:text-sm font-bold text-yellow-100">${member.name}</span>
+                <span class="mt-2 bg-black/60 border border-green-500/30 backdrop-blur px-2 py-1 rounded text-xs sm:text-sm font-mono text-green-300 shadow-sm">${member.name}</span>
             `;
             container.appendChild(div);
         });
@@ -275,30 +345,33 @@
         }
 
         // --- Effects ---
-        // Snow (Note: Snow is appended to body, so it stays over the sliding viewport)
+        // Snow (Updated to be cleaner for Matrix theme)
         setInterval(() => {
             const snow = document.createElement('div');
             snow.classList.add('snowflake');
-            snow.innerHTML = '❄';
+            snow.innerHTML = Math.random() > 0.5 ? '1' : '0'; // Binary snow!
             snow.style.left = Math.random() * 100 + 'vw';
             snow.style.fontSize = (Math.random() * 10 + 10) + 'px';
             snow.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            // Random green or white
+            snow.style.color = Math.random() > 0.8 ? '#fff' : '#22c55e';
             document.body.appendChild(snow);
             setTimeout(() => snow.remove(), 5000);
-        }, 100);
+        }, 150);
 
         function createFirework() {
-            const colors = ['#ff0000', '#00ff00', '#ffd700'];
+            const colors = ['#22c55e', '#ffffff', '#ef4444']; // Green, White, Red
             for(let i=0; i<30; i++) {
                 const p = document.createElement('div');
-                p.style.cssText = `position:absolute;left:50%;top:50%;width:8px;height:8px;border-radius:50%;pointer-events:none;z-index:50;transition:all 1s ease-out;opacity:1;`;
+                p.style.cssText = `position:absolute;left:50%;top:50%;width:6px;height:6px;border-radius:0;pointer-events:none;z-index:50;transition:all 1s ease-out;opacity:1;`;
                 p.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+                p.style.boxShadow = "0 0 10px " + p.style.backgroundColor; // Glowing particles
                 document.body.appendChild(p);
                 const rect = cardWrapper.getBoundingClientRect();
                 p.style.left = (rect.left + rect.width/2) + 'px';
                 p.style.top = (rect.top + rect.height/2) + 'px';
                 requestAnimationFrame(() => {
-                    p.style.transform = `translate(${(Math.random()-0.5)*400}px, ${(Math.random()-0.5)*400}px)`;
+                    p.style.transform = `translate(${(Math.random()-0.5)*400}px, ${(Math.random()-0.5)*400}px) rotate(${Math.random()*360}deg)`;
                     p.style.opacity = '0';
                 });
                 setTimeout(() => p.remove(), 1000);
