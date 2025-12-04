@@ -9,15 +9,37 @@
     <style>
         body {
             font-family: 'Quicksand', sans-serif;
-            background: linear-gradient(to bottom, #1a472a, #2d5a3f);
-            overflow: hidden;
-            margin: 0;
-            padding: 0;
+            background: linear-gradient(to bottom, #1a472a, #0f2b1d);
+            overflow: hidden; /* Prevent scrolling */
             height: 100vh;
+            width: 100vw;
         }
 
-        .christmas-font {
-            font-family: 'Mountains of Christmas', cursive;
+        .christmas-font { font-family: 'Mountains of Christmas', cursive; }
+
+        /* Viewport Transition Wrapper */
+        #main-viewport {
+            height: 200vh; /* Holds both screens stacked */
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            /* Start shifted up by 100vh so we see the Card (the bottom half) first */
+            transform: translateY(-100vh); 
+            transition: transform 1.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        /* Class to slide everything down */
+        .slide-down-active {
+            transform: translateY(0) !important;
+        }
+
+        /* Each Scene takes full screen height */
+        .scene-section {
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            overflow-y: auto; /* Allow scrolling inside the scene if content is long */
+            overflow-x: hidden;
         }
 
         /* Snow Animation */
@@ -28,199 +50,258 @@
             font-size: 1em;
             opacity: 0.8;
             pointer-events: none;
-            z-index: 1;
+            z-index: 50; /* Snow on top of everything */
             animation: fall linear forwards;
         }
+        @keyframes fall { to { transform: translateY(110vh); } }
 
-        @keyframes fall {
-            to {
-                transform: translateY(110vh);
-            }
+        /* Card Animation */
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .card-container { transition: transform 0.8s cubic-bezier(0.4, 0.0, 0.2, 1); }
+        .open-state .card-container { transform: rotateY(180deg); }
+
+        /* Ornament Animation */
+        .ornament {
+            transition: transform 0.3s ease, filter 0.3s ease;
+            transform-origin: top center;
+            animation: sway 3s ease-in-out infinite alternate;
+        }
+        .ornament:hover {
+            transform: scale(1.1) rotate(0deg) !important;
+            filter: drop-shadow(0 0 10px gold);
+            z-index: 50;
+            cursor: pointer;
+        }
+        @keyframes sway {
+            0% { transform: rotate(-3deg); }
+            100% { transform: rotate(3deg); }
         }
 
-        /* Card Flip/Open Animation details */
-        .perspective-1000 {
-            perspective: 1000px;
-        }
-        
-        .transform-style-3d {
-            transform-style: preserve-3d;
-        }
-
-        .backface-hidden {
-            backface-visibility: hidden;
-        }
-
-        .rotate-y-180 {
-            transform: rotateY(180deg);
-        }
-
-        .card-container {
-            transition: transform 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
-        }
-
-        .open-state .card-container {
-            transform: rotateY(180deg);
-        }
-
-        /* Twinkling lights */
-        @keyframes twinkle {
-            0%, 100% { opacity: 1; box-shadow: 0 0 10px #ffd700; }
-            50% { opacity: 0.5; box-shadow: 0 0 2px #ffd700; }
-        }
-
-        .light {
-            animation: twinkle 1.5s infinite ease-in-out;
-        }
-        .light:nth-child(even) { animation-delay: 0.5s; }
-        .light:nth-child(3n) { animation-delay: 1s; }
-
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f2b1d; }
+        ::-webkit-scrollbar-thumb { background: #c53030; rounded: 4px; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen relative">
+<body class="text-white">
 
-    <!-- Background Decorations -->
-    <div class="absolute top-0 w-full h-16 flex justify-around items-start z-10 pointer-events-none">
-        <!-- Creating a string of lights -->
-        <div class="w-1 h-8 bg-gray-600 relative"><div class="light w-4 h-4 rounded-full bg-red-500 absolute bottom-0 -left-1.5 shadow-lg"></div></div>
-        <div class="w-1 h-10 bg-gray-600 relative"><div class="light w-4 h-4 rounded-full bg-yellow-400 absolute bottom-0 -left-1.5 shadow-lg"></div></div>
-        <div class="w-1 h-8 bg-gray-600 relative"><div class="light w-4 h-4 rounded-full bg-blue-400 absolute bottom-0 -left-1.5 shadow-lg"></div></div>
-        <div class="w-1 h-12 bg-gray-600 relative"><div class="light w-4 h-4 rounded-full bg-green-500 absolute bottom-0 -left-1.5 shadow-lg"></div></div>
-        <div class="w-1 h-8 bg-gray-600 relative"><div class="light w-4 h-4 rounded-full bg-red-500 absolute bottom-0 -left-1.5 shadow-lg"></div></div>
-        <div class="w-1 h-10 bg-gray-600 relative"><div class="light w-4 h-4 rounded-full bg-yellow-400 absolute bottom-0 -left-1.5 shadow-lg"></div></div>
-        <div class="w-1 h-8 bg-gray-600 relative"><div class="light w-4 h-4 rounded-full bg-blue-400 absolute bottom-0 -left-1.5 shadow-lg"></div></div>
+    <!-- Main Wrapper that slides -->
+    <div id="main-viewport">
+        
+        <!-- SCENE 2: THE TEAM TREE (Positioned on TOP) -->
+        <div id="scene-tree" class="scene-section flex flex-col items-center py-10 relative">
+            <h1 class="christmas-font text-5xl text-yellow-400 mb-2 text-center drop-shadow-lg mt-8">Our Team Tree</h1>
+            <p class="text-center text-gray-300 mb-8 max-w-md px-4">Tap an ornament to see a message!</p>
+            
+            <!-- Tree Container -->
+            <div class="relative w-full max-w-4xl px-4 flex justify-center pb-20">
+                <div id="team-container" class="flex flex-wrap justify-center items-start gap-8 max-w-2xl">
+                    <!-- Ornaments will be injected here by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Back Button -->
+            <button onclick="backToCard()" class="fixed bottom-6 left-6 bg-white/10 hover:bg-white/20 backdrop-blur text-white px-4 py-2 rounded-full border border-white/30 transition z-40">
+                ↑ Back to Card
+            </button>
+        </div>
+
+        <!-- SCENE 1: THE CARD (Positioned on BOTTOM) -->
+        <div id="scene-card" class="scene-section flex items-center justify-center">
+            <div id="cardWrapper" class="relative w-80 h-96 sm:w-96 sm:h-[500px] perspective-1000 z-20 cursor-pointer group">
+                <div class="card-container relative w-full h-full transform-style-3d shadow-2xl rounded-xl">
+                    
+                    <!-- Front -->
+                    <div class="absolute w-full h-full backface-hidden bg-red-700 rounded-xl flex flex-col items-center justify-center border-4 border-yellow-400 p-6 text-center text-white">
+                        <div class="text-6xl mb-4">🎄</div>
+                        <h1 class="christmas-font text-5xl font-bold mb-2 text-yellow-300">Merry Christmas</h1>
+                        <p class="text-lg opacity-90">To Our Amazing Team</p>
+                        <div class="mt-8 animate-bounce">
+                            <span class="bg-white text-red-700 px-4 py-2 rounded-full font-bold shadow-lg text-sm">Tap to Open</span>
+                        </div>
+                    </div>
+
+                    <!-- Back (Inside) -->
+                    <div class="absolute w-full h-full backface-hidden rotate-y-180 bg-white rounded-xl flex flex-col items-center justify-center p-8 text-center border-4 border-red-700 shadow-inner">
+                        <h2 class="christmas-font text-3xl text-red-600 font-bold mb-2">Seasons Greetings</h2>
+                        <p class="text-gray-700 text-sm leading-relaxed mb-6">
+                            We wanted to send you a special wish from everyone on our team.
+                        </p>
+                        
+                        <!-- BUTTON to Trigger Slide -->
+                        <button onclick="goToTree(event)" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition hover:scale-105 flex items-center gap-2">
+                            <span>🎁</span> Meet the Team
+                        </button>
+                        
+                        <button onclick="resetCard(event)" class="mt-6 text-xs text-gray-400 hover:text-red-500 underline">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Main Card Container -->
-    <div id="cardWrapper" class="relative w-80 h-96 sm:w-96 sm:h-[500px] perspective-1000 z-20 cursor-pointer group">
-        
-        <div class="card-container relative w-full h-full transform-style-3d shadow-2xl rounded-xl">
-            
-            <!-- Front of Card -->
-            <div class="absolute w-full h-full backface-hidden bg-red-700 rounded-xl flex flex-col items-center justify-center border-4 border-yellow-400 p-6 text-center text-white">
-                <div class="text-6xl mb-4">🎄</div>
-                <h1 class="christmas-font text-5xl font-bold mb-2 text-yellow-300 drop-shadow-md">Merry Christmas</h1>
-                <p class="text-lg opacity-90">To Mortgage House</p>
-                
-                <div class="mt-8 animate-bounce">
-                    <span class="bg-white text-red-700 px-4 py-2 rounded-full font-bold shadow-lg text-sm">
-                        Tap to Open
-                    </span>
-                </div>
-
-                <!-- Decorative Pattern -->
-                <div class="absolute bottom-4 w-full flex justify-center gap-2 opacity-30">
-                    <span>❄️</span><span>❄️</span><span>❄️</span>
-                </div>
+    <!-- MESSAGE MODAL (Pop-up) -->
+    <div id="messageModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4" onclick="closeModal()">
+        <div class="bg-white text-gray-800 rounded-2xl p-6 max-w-sm w-full relative transform scale-100 transition shadow-2xl border-4 border-green-600" onclick="event.stopPropagation()">
+            <button onclick="closeModal()" class="absolute top-2 right-4 text-3xl text-gray-400 hover:text-red-500">&times;</button>
+            <div class="flex flex-col items-center text-center">
+                <img id="modalImg" src="" class="w-24 h-24 rounded-full border-4 border-red-500 shadow-lg mb-4 object-cover">
+                <h3 id="modalName" class="christmas-font text-3xl text-green-700 font-bold"></h3>
+                <div class="w-16 h-1 bg-yellow-400 my-3 rounded"></div>
+                <p id="modalMsg" class="text-lg leading-relaxed italic text-gray-600"></p>
             </div>
-
-            <!-- Inside of Card (Back) -->
-            <div class="absolute w-full h-full backface-hidden rotate-y-180 bg-white rounded-xl flex flex-col items-center justify-center p-8 text-center border-4 border-red-700 shadow-inner">
-                
-                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4 text-3xl">
-                    🎅
-                </div>
-
-                <h2 class="christmas-font text-3xl text-red-600 font-bold mb-4">Warmest Wishes</h2>
-                
-                <p class="text-gray-700 leading-relaxed mb-6">
-                    May your holidays be filled with joy, laughter, and magical moments. Wishing you a wonderful Christmas and a Happy New Year!
-                </p>
-
-                <p class="christmas-font text-2xl text-green-700">
-                    With Love,
-                    <br>
-                    <span id="senderName" class="text-red-600">Santa's Helper</span>
-                </p>
-
-                <button onclick="resetCard(event)" class="mt-8 text-xs text-gray-400 hover:text-red-500 underline">
-                    Close Card
-                </button>
-            </div>
-
         </div>
     </div>
 
-    <!-- Footer -->
-    <div class="absolute bottom-4 text-white/50 text-xs text-center w-full z-10">
-        Made with Holiday Cheer
-    </div>
-
     <script>
+        // ==========================================
+        //  👇 EDIT YOUR TEAM HERE 👇
+        // ==========================================
+        
+        const teamMembers = [
+            {
+                name: "Alex the Puppy",
+                message: "Barking you a Merry Christmas!",
+                photoUrl: "https://loremflickr.com/200/200/puppy?lock=1" 
+            },
+            {
+                name: "Sarah the Kitty",
+                message: "Have a purr-fect holiday season! 🐾",
+                photoUrl: "https://loremflickr.com/200/200/kitten?lock=2"
+            },
+            {
+                name: "Mike the Bear",
+                message: "Sending bear hugs to you and your family.",
+                photoUrl: "https://loremflickr.com/200/200/bear?lock=3"
+            },
+            {
+                name: "Jessica the Fox",
+                message: "Staying clever and cozy this winter.",
+                photoUrl: "https://loremflickr.com/200/200/fox?lock=4"
+            },
+            {
+                name: "David the Panda",
+                message: "Eating bamboo and spreading joy! 🎋",
+                photoUrl: "https://loremflickr.com/200/200/panda?lock=5"
+            },
+            {
+                name: "Emily the Owl",
+                message: "Whooo wishes you a Happy New Year? I do!",
+                photoUrl: "https://loremflickr.com/200/200/owl?lock=6"
+            },
+            {
+                name: "Chris the Dog",
+                message: "Unleashing joy this holiday season!",
+                photoUrl: "https://loremflickr.com/200/200/dog?lock=7"
+            },
+            {
+                name: "Amanda the Bun",
+                message: "Hopping into 2025 with excitement!",
+                photoUrl: "https://loremflickr.com/200/200/rabbit?lock=8"
+            }
+        ];
+
+        // ==========================================
+        //  👆 END OF EDITING AREA 👆
+        // ==========================================
+
+        // --- Tree Builder ---
+        const container = document.getElementById('team-container');
+        teamMembers.forEach((member) => {
+            const div = document.createElement('div');
+            const delay = Math.random() * 2; 
+            div.className = 'ornament flex flex-col items-center group relative';
+            div.style.animationDelay = `-${delay}s`;
+            div.onclick = () => showMessage(member);
+            div.innerHTML = `
+                <div class="h-8 w-0.5 bg-yellow-200 opacity-60"></div>
+                <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-yellow-400 overflow-hidden shadow-[0_0_15px_rgba(255,215,0,0.3)] bg-white relative z-10 transition hover:border-white">
+                    <img src="${member.photoUrl}" alt="${member.name}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black/10 hover:bg-transparent transition"></div>
+                </div>
+                <span class="mt-2 bg-black/30 backdrop-blur px-2 py-1 rounded text-xs sm:text-sm font-bold text-yellow-100">${member.name}</span>
+            `;
+            container.appendChild(div);
+        });
+
         // --- Interaction Logic ---
         const cardWrapper = document.getElementById('cardWrapper');
-        
+        const viewport = document.getElementById('main-viewport');
+
+        // Card Click
         cardWrapper.addEventListener('click', function() {
             this.classList.toggle('open-state');
-            createFirework();
+            if(this.classList.contains('open-state')) createFirework();
         });
 
         function resetCard(e) {
-            e.stopPropagation(); // Prevent the parent click from triggering immediately
+            e.stopPropagation();
             cardWrapper.classList.remove('open-state');
         }
 
-        // --- Snow Logic ---
-        function createSnowflake() {
-            const snow = document.createElement('div');
-            snow.classList.add('snowflake');
-            snow.innerHTML = '❄'; // You can also use • or *
-            
-            // Randomize position and size
-            snow.style.left = Math.random() * 100 + 'vw';
-            snow.style.fontSize = (Math.random() * 10 + 10) + 'px';
-            
-            // Randomize animation duration
-            const duration = Math.random() * 3 + 2; // Between 2 and 5 seconds
-            snow.style.animationDuration = duration + 's';
-            
-            document.body.appendChild(snow);
-
-            // Remove snowflake after it falls
-            setTimeout(() => {
-                snow.remove();
-            }, duration * 1000);
+        // --- SLIDE ANIMATION LOGIC ---
+        function goToTree(e) {
+            e.stopPropagation();
+            // Slide Down to 0 (Showing Top Section)
+            viewport.classList.add('slide-down-active');
         }
 
-        // Create snow continuously
-        setInterval(createSnowflake, 100);
+        function backToCard() {
+            // Slide Up back to -100vh (Showing Bottom Section)
+            viewport.classList.remove('slide-down-active');
+        }
 
-        // --- Confetti/Firework on Open ---
+        // --- Modal Logic ---
+        const modal = document.getElementById('messageModal');
+        const mImg = document.getElementById('modalImg');
+        const mName = document.getElementById('modalName');
+        const mMsg = document.getElementById('modalMsg');
+
+        function showMessage(member) {
+            mImg.src = member.photoUrl;
+            mName.innerText = member.name;
+            mMsg.innerText = member.message;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // --- Effects ---
+        // Snow (Note: Snow is appended to body, so it stays over the sliding viewport)
+        setInterval(() => {
+            const snow = document.createElement('div');
+            snow.classList.add('snowflake');
+            snow.innerHTML = '❄';
+            snow.style.left = Math.random() * 100 + 'vw';
+            snow.style.fontSize = (Math.random() * 10 + 10) + 'px';
+            snow.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            document.body.appendChild(snow);
+            setTimeout(() => snow.remove(), 5000);
+        }, 100);
+
         function createFirework() {
-            if(!cardWrapper.classList.contains('open-state')) return;
-
             const colors = ['#ff0000', '#00ff00', '#ffd700'];
             for(let i=0; i<30; i++) {
-                const particle = document.createElement('div');
-                particle.style.position = 'absolute';
-                particle.style.left = '50%';
-                particle.style.top = '50%';
-                particle.style.width = '8px';
-                particle.style.height = '8px';
-                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                particle.style.borderRadius = '50%';
-                particle.style.pointerEvents = 'none';
-                particle.style.zIndex = '50';
-                
-                // Random destination
-                const tx = (Math.random() - 0.5) * 400;
-                const ty = (Math.random() - 0.5) * 400;
-                
-                particle.style.transition = 'transform 1s ease-out, opacity 1s ease-out';
-                
-                document.body.appendChild(particle); // Append to body so it pops out of card
-                
-                // Get card position to center the pop
+                const p = document.createElement('div');
+                p.style.cssText = `position:absolute;left:50%;top:50%;width:8px;height:8px;border-radius:50%;pointer-events:none;z-index:50;transition:all 1s ease-out;opacity:1;`;
+                p.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+                document.body.appendChild(p);
                 const rect = cardWrapper.getBoundingClientRect();
-                particle.style.left = (rect.left + rect.width/2) + 'px';
-                particle.style.top = (rect.top + rect.height/2) + 'px';
-
+                p.style.left = (rect.left + rect.width/2) + 'px';
+                p.style.top = (rect.top + rect.height/2) + 'px';
                 requestAnimationFrame(() => {
-                    particle.style.transform = `translate(${tx}px, ${ty}px)`;
-                    particle.style.opacity = '0';
+                    p.style.transform = `translate(${(Math.random()-0.5)*400}px, ${(Math.random()-0.5)*400}px)`;
+                    p.style.opacity = '0';
                 });
-
-                setTimeout(() => particle.remove(), 1000);
+                setTimeout(() => p.remove(), 1000);
             }
         }
     </script>
