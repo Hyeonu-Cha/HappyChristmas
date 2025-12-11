@@ -114,8 +114,8 @@
             <p class="text-center text-green-200 mb-8 max-w-md px-4 font-mono text-sm">> Accessing Team Database...</p>
             
             <!-- Tree Container -->
-            <div class="relative w-full max-w-4xl px-4 flex justify-center pb-20">
-                <div id="team-container" class="flex flex-wrap justify-center items-start gap-8 max-w-2xl">
+            <div class="relative w-full max-w-5xl px-4 flex justify-center pb-32">
+                <div id="team-container" class="flex flex-wrap justify-center items-start gap-6 max-w-4xl">
                     <!-- Ornaments will be injected here by JavaScript -->
                 </div>
             </div>
@@ -183,47 +183,30 @@
         //  👇 EDIT YOUR TEAM HERE 👇
         // ==========================================
         
+        // IMPORTANT: 
+        // 1. Make sure you create a folder named 'Photo' in your GitHub repository.
+        // 2. Upload images there.
+        // 3. Ensure the filenames match EXACTLY (Abishkar_Rai.png is not the same as abishkar_rai.jpg).
+        // 4. If your images are .jpg, change the extension in the code below.
+
         const teamMembers = [
-            {
-                name: "Agent Puppy",
-                message: "Barking you a Merry Christmas!",
-                photoUrl: "https://loremflickr.com/200/200/puppy?lock=1" 
-            },
-            {
-                name: "Neo Kitty",
-                message: "There is no spoon... only catnip. 🐾",
-                photoUrl: "https://loremflickr.com/200/200/kitten?lock=2"
-            },
-            {
-                name: "Morpheus Bear",
-                message: "Sending bear hugs to you and your family.",
-                photoUrl: "https://loremflickr.com/200/200/bear?lock=3"
-            },
-            {
-                name: "Trinity Fox",
-                message: "Staying clever and cozy this winter.",
-                photoUrl: "https://loremflickr.com/200/200/fox?lock=4"
-            },
-            {
-                name: "Oracle Panda",
-                message: "I predict... lots of bamboo! 🎋",
-                photoUrl: "https://loremflickr.com/200/200/panda?lock=5"
-            },
-            {
-                name: "Cipher Owl",
-                message: "Whooo wishes you a Happy New Year? I do!",
-                photoUrl: "https://loremflickr.com/200/200/owl?lock=6"
-            },
-            {
-                name: "Tank Dog",
-                message: "Unleashing joy this holiday season!",
-                photoUrl: "https://loremflickr.com/200/200/dog?lock=7"
-            },
-            {
-                name: "Switch Bun",
-                message: "Hopping into 2025 with excitement!",
-                photoUrl: "https://loremflickr.com/200/200/rabbit?lock=8"
-            }
+            // --- NEW TEAM MEMBERS (Linked to 'Photo' folder) ---
+            { name: "Abishkar Rai", message: "Happy Holidays from the Mainframe!", photoUrl: "Photo/Abi.png" },
+            { name: "Asti Lamichhane", message: "Wishing you 100% Uptime and 0 Bugs!", photoUrl: "Photo/Asti.png" },
+            { name: "Clyron Bello", message: "May your New Year be bug-free!", photoUrl: "Photo/Cly.png" },
+            { name: "Eric Cha", message: "System Status: Jolly.", photoUrl: "Photo/Eric.png" },
+            { name: "Krishan Khelawan", message: "Deploying joy to production...", photoUrl: "Photo/Krishan.png" },
+            { name: "Krystyna Mustac", message: "Wishing you a secure and happy holiday!", photoUrl: "Photo/Krystyna.png" },
+            { name: "Logan Langford", message: "Hacking the holidays for maximum fun.", photoUrl: "Photo/Logan.png" },
+            { name: "Mae Ann Mojado", message: "Sending encrypted hugs!", photoUrl: "Photo/Mae.png" },
+            { name: "Michael Connolly", message: "May your days be merry and your code clean.", photoUrl: "Photo/Michael_C.png" },
+            { name: "Michael Mortlock", message: "Festive algorithms activated.", photoUrl: "Photo/Michael.png" },
+            // { name: "Mikhaela Ferrer", message: "Merry Christmas from the digital world!", photoUrl: "Photo/Mikhaela_Ferrer.png" },
+            { name: "Premlata Gaur", message: "Wishing you a pixel-perfect new year.", photoUrl: "Photo/Prem.png" },
+            { name: "Rejina Chhetri", message: "Loading happiness... 100%", photoUrl: "Photo/Rej.png" },
+            { name: "Ryuji Uematsu", message: "Have a wonderful holiday reboot!", photoUrl: "Photo/Ryuji.png" },
+            { name: "Saydi Saydikirim", message: "Peace, Love, and Code.", photoUrl: "Photo/Saydi_Saydi.png" },
+            { name: "Tony Taneski", message: "See you in the next build version (2025)!", photoUrl: "Photo/Tony.png" }
         ];
 
         // ==========================================
@@ -286,14 +269,22 @@
             div.className = 'ornament flex flex-col items-center group relative';
             div.style.animationDelay = `-${delay}s`;
             div.onclick = () => showMessage(member);
+            
+            // ERROR HANDLING FOR IMAGES
+            // If the local photo isn't found, it falls back to a placeholder
+            const fallbackUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random&color=fff`;
+
             // Updated styles for Matrix Theme (Green borders, glow)
             div.innerHTML = `
                 <div class="h-8 w-0.5 bg-green-500/50"></div>
-                <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-green-500 overflow-hidden shadow-[0_0_10px_rgba(34,197,94,0.4)] bg-black relative z-10 transition hover:border-white hover:shadow-[0_0_20px_#4ade80]">
-                    <img src="${member.photoUrl}" alt="${member.name}" class="w-full h-full object-cover opacity-90 group-hover:opacity-100">
+                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-green-500 overflow-hidden shadow-[0_0_10px_rgba(34,197,94,0.4)] bg-black relative z-10 transition hover:border-white hover:shadow-[0_0_20px_#4ade80]">
+                    <img src="${member.photoUrl}" 
+                         alt="${member.name}" 
+                         class="w-full h-full object-cover opacity-90 group-hover:opacity-100"
+                         onerror="this.src='${fallbackUrl}'">
                     <div class="absolute inset-0 bg-green-900/20 group-hover:bg-transparent transition"></div>
                 </div>
-                <span class="mt-2 bg-black/60 border border-green-500/30 backdrop-blur px-2 py-1 rounded text-xs sm:text-sm font-mono text-green-300 shadow-sm">${member.name}</span>
+                <span class="mt-2 bg-black/60 border border-green-500/30 backdrop-blur px-2 py-1 rounded text-[10px] sm:text-xs font-mono text-green-300 shadow-sm text-center w-auto whitespace-nowrap">${member.name}</span>
             `;
             container.appendChild(div);
         });
@@ -332,7 +323,12 @@
         const mMsg = document.getElementById('modalMsg');
 
         function showMessage(member) {
+            // Check if photoUrl is a valid path or we need fallback
             mImg.src = member.photoUrl;
+            mImg.onerror = function() {
+                this.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random&color=fff`;
+            };
+
             mName.innerText = member.name;
             mMsg.innerText = member.message;
             modal.classList.remove('hidden');
